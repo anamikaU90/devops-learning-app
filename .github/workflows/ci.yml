@@ -1,0 +1,60 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]      
+  pull_request:
+    branches: [main]      
+
+jobs:
+  #job1 : backend_test
+  backend_test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name : Setup Node.jobs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+
+    - name: Install backend dependencies
+      run: npm install
+
+    - name: Run backend tests
+      run: npm run test
+  
+  #job2 : frontend_test
+  frontend_test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup Node.jobs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+    - name: Install frontend dependencies
+      run: npm install
+    - name: Run frontend tests
+      run: npm run test
+  
+  #job3 : build check
+  build:
+    runs-on: ubuntu-latest
+    needs: [backend_test, frontend_test]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup Node.jobs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+    - name: Install & Build frontend
+      run: | 
+        cd client
+        npm install
+        npm run build
+    - name: Build Success
+      run: echo "Build Success"
