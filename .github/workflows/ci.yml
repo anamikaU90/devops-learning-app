@@ -36,11 +36,11 @@ jobs:
       with:
         node-version: 20
     - name: Install frontend dependencies
+      working-directory: ./client
       run: npm install
     - name: Run frontend tests
-      run: |
-        cd client
-        CI=true npm test  --passWithNoTests
+      working-directory: ./client
+      run: CI=true npm test  --passWithNoTests
   
   #job3 : build check
   build:
